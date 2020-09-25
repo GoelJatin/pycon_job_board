@@ -13,7 +13,7 @@ class Submitter(models.Model):
 
 
 class Job(models.Model):
-    submitter = models.ForeignKey(
+    submitted_by = models.ForeignKey(
         Submitter,
         on_delete=models.CASCADE
     )
