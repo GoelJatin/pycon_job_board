@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<h3>Submit a Job:</h3>
+
+<form action="/submit_job" method="post">
+    {% csrf_token %}
+
+    {{ submitter_form|crispy }}
+    {{ job_form|crispy }}
+
+    {% if send_otp %}
+        <button type="submit" class="btn btn-primary" name="send_otp">Send OTP</button>
+    {% endif %}
+    <button type="submit" class="btn btn-primary" name="submit">Submit</button>
+</form>
+
+<br>
+<hr>
+<br>
+
+{% endblock %}
