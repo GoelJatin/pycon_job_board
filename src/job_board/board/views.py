@@ -23,6 +23,7 @@ class JobView(View):
             request,
             'jobs.html',
             {
+                'columns': [field.verbose_name.capitalize() for field in Job._meta.fields],
                 'jobs': Job.objects.all()
             }
         )
@@ -36,12 +37,15 @@ class SubmitJobView(View):
         send_otp = True
 
         if 'email' in request.session:
-            submitter = Submitter.objects.filter(email=request.session['email']).first()
-
-            if submitter:
+            try:
+                submitter = Submitter.objects.get(email=request.session['email'])
                 submitter_form = SubmitterForm(instance=submitter)
+                submitter_form.fields['email'].disabled = True
+
                 del submitter_form.fields['otp']
                 send_otp = False
+            except Submitter.DoesNotExist:
+                pass
 
         return render(
             request,
@@ -54,14 +58,24 @@ class SubmitJobView(View):
         )
 
     def post(self, request):
-        submitter_form = SubmitterForm(request.POST)
-        job_form = JobForm(request.POST)
+        send_otp = True
+        post_data = request.POST.copy()
+
+        if 'email' in request.session:
+            post_data['email'] = request.session['email']
+            send_otp = False
+
+        submitter_form = SubmitterForm(post_data)
+        job_form = JobForm(post_data)
+
+        if not send_otp:
+            submitter_form.fields['email'].disabled = True
 
         if submitter_form.is_valid():
             if job_form.is_valid():
                 submitter_form.save()
 
-                job_form.cleaned_data['submitter'] = Submitter.objects.filter(email=submitter_form.cleaned_data['email']).first()
+                job_form.cleaned_data['submitted_by'] = Submitter.objects.get(email=submitter_form.cleaned_data['email'])
                 job_form.save()
 
                 request.session['email'] = submitter_form.cleaned_data['email']
@@ -72,6 +86,7 @@ class SubmitJobView(View):
             self.template,
             {
                 'submitter_form': submitter_form,
-                'job_form': job_form
+                'job_form': job_form,
+                'send_otp': send_otp
             }
         )

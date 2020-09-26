@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+{% load tags %}
+
+{% block content %}
+
+<h3>All Jobs:</h3>
+
+<table class="table table-responsive table-hover">
+    <tr>
+        {% for column in columns %}
+            <th>
+                {{ column }}
+            </th>
+        {% endfor %}
+    </tr>
+
+    {% for job in jobs %}
+        <tr>
+            <td>{{ job.id }}</td>
+            <td>{{ job.submitted_by.email | redact_email }}</td>
+            <td>{{ job.company }}</td>
+            <td>{{ job.website | url_target_blank | urlize }}</td>
+            <td>{{ job.title }}</td>
+            <td>{{ job.job_url | url_target_blank | urlize }}</td>
+            <td>{{ job.description }}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+<br>
+<hr>
+<br>
+
+<a href="{% url 'board:submit_job' %}">Share a Job</a>
+{% endblock %}
