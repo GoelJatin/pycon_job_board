@@ -21,4 +21,5 @@ class Job(models.Model):
     website = models.URLField(null=False)
 
     title = models.CharField(max_length=100, null=False)
-    job_url = models.URLField(null=False)
+    job_url = models.URLField(null=True)
+    description = models.CharField(max_length=100, null=True)
