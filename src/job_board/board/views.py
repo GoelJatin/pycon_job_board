@@ -68,9 +68,6 @@ class SubmitJobView(View):
         submitter_form = SubmitterForm(post_data)
         job_form = JobForm(post_data)
 
-        if not send_otp:
-            submitter_form.fields['email'].disabled = True
-
         if submitter_form.is_valid():
             if job_form.is_valid():
                 submitter_form.save()
@@ -80,6 +77,12 @@ class SubmitJobView(View):
 
                 request.session['email'] = submitter_form.cleaned_data['email']
                 return redirect('/jobs')
+
+        if not send_otp:
+            del submitter_form.fields['otp']
+
+            # submitter_form.fields['email'].disabled = True
+            submitter_form.fields['email'].required = False
 
         return render(
             request,

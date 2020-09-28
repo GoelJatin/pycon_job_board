@@ -26,11 +26,11 @@ class SubmitterForm(forms.ModelForm):
 
     def clean(self):
         email = self.data.get('email')
+        self.cleaned_data['email'] = email
 
         try:
             # Don't raise any errors if cleanup is called for an existing submitter
             _ = Submitter.objects.get(email=email)
-            self.cleaned_data['email'] = email
         except Submitter.DoesNotExist:
             cleaned_data = super(SubmitterForm, self).clean()
 
@@ -59,8 +59,6 @@ class SubmitterForm(forms.ModelForm):
 
         email = self.cleaned_data['email']
         del self.cleaned_data['email']
-
-        print(self.cleaned_data, email)
 
         submitter, _ = Submitter.objects.update_or_create(defaults=self.cleaned_data, email=email)
         submitter.save()
