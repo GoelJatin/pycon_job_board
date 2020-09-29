@@ -11,6 +11,7 @@ psycopg2-binary = "*"
 gunicorn = "*"
 django-crispy-forms = "*"
 django-bootstrap4 = "*"
+django-heroku = "*"
 
 [requires]
 python_version = "3.8"
