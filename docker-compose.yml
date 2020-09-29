@@ -1,33 +1,9 @@
 version: "3.8"
 
 services:
-  postgres:
-    image: postgres:11
-    env_file: .env.development
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-
-  django:
+  heroku:
     build:
       context: .
-      dockerfile: Dockerfile.django
-    env_file: .env.development
+      dockerfile: Dockerfile
     volumes:
-      - ./src:/app
-      - static:/app/job_board/static
-    depends_on:
-      - postgres
-    command: ["./wait-for-it.sh", "postgres:5432", "--", "bash", "startup.sh"]
-
-  nginx:
-    build: ./nginx
-    ports:
-      - 80:80
-    volumes:
-      - static:/app/job_board/static
-    depends_on:
-      - django
-
-volumes:
-  pgdata:
-  static:
+      - ./:/app
