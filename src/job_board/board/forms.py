@@ -3,6 +3,8 @@ from concurrent.futures import ThreadPoolExecutor
 import random
 
 from django import forms
+from django.conf import settings
+from django.core.mail import send_mail
 from django.core.exceptions import ValidationError
 
 from .models import (
@@ -46,7 +48,19 @@ class SubmitterForm(forms.ModelForm):
                     )
                     user.save()
 
-                    # TODO: send otp to email
+                    send_mail(
+                        'Hey!! Welcome to PyCon India Job Board',
+                        f'''
+Hello {email},
+
+    Your OTP to validate your email address is: {otp}
+
+Regards,
+PyCon India
+                        ''',
+                        settings.EMAIL_HOST_USER,
+                        [email]
+                    )
                     raise ValidationError('Please provide the OTP sent to your email')
                 else:
                     user = User.objects.filter(email=email).first()
