@@ -4,6 +4,12 @@
 
 {% block content %}
 
+<a href="{% url 'board:jobs' %}">View all jobs</a>
+
+<br>
+<hr>
+<br>
+
 <h3>Submit a Job:</h3>
 
 <form action="/submit_job" method="post">
@@ -17,10 +23,4 @@
     {% endif %}
     <button type="submit" class="btn btn-primary" name="submit">Submit</button>
 </form>
-
-<br>
-<hr>
-<br>
-
-<a href="{% url 'board:jobs' %}">View all jobs</a>
 {% endblock %}

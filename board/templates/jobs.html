@@ -5,6 +5,12 @@
 
 {% block content %}
 
+<a href="{% url 'board:submit_job' %}">Share a Job</a>
+
+<br>
+<hr>
+<br>
+
 <h3>All Jobs:</h3>
 
 <table class="table table-responsive table-hover">
@@ -28,10 +34,4 @@
         </tr>
     {% endfor %}
 </table>
-
-<br>
-<hr>
-<br>
-
-<a href="{% url 'board:submit_job' %}">Share a Job</a>
 {% endblock %}
